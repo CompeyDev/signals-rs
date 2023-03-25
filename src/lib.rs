@@ -226,6 +226,7 @@ impl Drop for Signal {
 
         self.connections = HashMap::new();
 
+        #[cfg(feature = "log")]
         log(Scope::Info, format!("sucessfully ran drop cleanup").as_str());
     }
 }

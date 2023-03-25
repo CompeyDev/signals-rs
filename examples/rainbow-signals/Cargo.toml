@@ -1,0 +1,11 @@
+[package]
+name = "rainbow-signals"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+colored = "2.0.0"
+rand = "0.8.5"
+signals_rs = { git = "https://github.com/CompeyDev/signals-rs.git", branch = "main" }
