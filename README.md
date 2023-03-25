@@ -23,9 +23,9 @@ fn main() {
 Signals are especially useful as lightweight events for global state sync-ups.
 
 # Installation
-In order to install signals-rs, you can add it as such to your dependencies section in `Crates.toml`:
+In order to install signals-rs, you can add it as such to your dependencies section in `Cargo.toml`:
 
 ```toml
 [dependencies]
-signals_rs = { git = "https://github.com/CompeyDev/signals-rs", branch = "main" }
+signals_rs = { git = "https://github.com/CompeyDev/signals-rs.git", branch = "main" }
 ```
