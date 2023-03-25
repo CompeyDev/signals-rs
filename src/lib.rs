@@ -223,14 +223,14 @@ impl Signal {
 impl Drop for Signal {
     fn drop(&mut self) {
         #[cfg(feature = "log")]
-        log(Scope::Info, format!("dropping self: Signal").as_str());
+        log(Scope::Info, "dropping self: Signal".as_str());
 
         self.destroyed = true;
 
         self.connections = HashMap::new();
 
         #[cfg(feature = "log")]
-        log(Scope::Info, format!("sucessfully ran drop cleanup").as_str());
+        log(Scope::Info, "sucessfully ran drop cleanup".as_str());
     }
 }
 
