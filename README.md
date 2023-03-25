@@ -23,7 +23,7 @@ some_signal.destroy();
 Signals are especially useful as lightweight events for global state sync-ups.
 
 # Installation
-In order to install signals-rs, you can add it as such to your dependencies section in `Cargo.toml`:
+In order to install signals-rs, first switch to a nightly channel (`rustup toolchain install nightly`) for your rust compiler and then you can add it as such to your dependencies section in `Cargo.toml`:
 
 ```toml
 [dependencies]
