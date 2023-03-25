@@ -1,3 +1,5 @@
+#![doc = include_str!("../README_cargo.md")]
+
 use anymap::AnyMap as HashMap;
 #[cfg(feature = "log")]
 use logger::{log, Scope};
