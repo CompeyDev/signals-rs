@@ -1,4 +1,5 @@
 use anymap::AnyMap as HashMap;
+#[cfg(feature = "log")]
 use logger::{log, Scope};
 use rand::random;
 
