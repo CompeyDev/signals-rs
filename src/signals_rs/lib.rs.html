@@ -284,6 +284,42 @@
 <a href="#284" id="284">284</a>
 <a href="#285" id="285">285</a>
 <a href="#286" id="286">286</a>
+<a href="#287" id="287">287</a>
+<a href="#288" id="288">288</a>
+<a href="#289" id="289">289</a>
+<a href="#290" id="290">290</a>
+<a href="#291" id="291">291</a>
+<a href="#292" id="292">292</a>
+<a href="#293" id="293">293</a>
+<a href="#294" id="294">294</a>
+<a href="#295" id="295">295</a>
+<a href="#296" id="296">296</a>
+<a href="#297" id="297">297</a>
+<a href="#298" id="298">298</a>
+<a href="#299" id="299">299</a>
+<a href="#300" id="300">300</a>
+<a href="#301" id="301">301</a>
+<a href="#302" id="302">302</a>
+<a href="#303" id="303">303</a>
+<a href="#304" id="304">304</a>
+<a href="#305" id="305">305</a>
+<a href="#306" id="306">306</a>
+<a href="#307" id="307">307</a>
+<a href="#308" id="308">308</a>
+<a href="#309" id="309">309</a>
+<a href="#310" id="310">310</a>
+<a href="#311" id="311">311</a>
+<a href="#312" id="312">312</a>
+<a href="#313" id="313">313</a>
+<a href="#314" id="314">314</a>
+<a href="#315" id="315">315</a>
+<a href="#316" id="316">316</a>
+<a href="#317" id="317">317</a>
+<a href="#318" id="318">318</a>
+<a href="#319" id="319">319</a>
+<a href="#320" id="320">320</a>
+<a href="#321" id="321">321</a>
+<a href="#322" id="322">322</a>
 </pre><pre class="rust"><code><span class="attr">#![doc = <span class="macro">include_str!</span>(<span class="string">&quot;../README_cargo.md&quot;</span>)]
 
 </span><span class="kw">use </span>anymap::AnyMap <span class="kw">as </span>HashMap;
@@ -365,7 +401,10 @@
             <span class="kw">let </span>connection_id: String = <span class="macro">format!</span>(<span class="string">&quot;{:x}&quot;</span>, random::&lt;u32&gt;());
 
             <span class="attr">#[cfg(feature = <span class="string">&quot;log&quot;</span>)]
-            </span>log(Scope::Info, <span class="macro">format!</span>(<span class="string">&quot;generating connection {}&quot;</span>, connection_id.clone()).as_str());
+            </span>log(
+                Scope::Info,
+                <span class="macro">format!</span>(<span class="string">&quot;generating connection {}&quot;</span>, connection_id.clone()).as_str(),
+            );
 
             <span class="kw">let </span><span class="kw-2">mut </span>connection_meta: HashMap&lt;<span class="kw-2">&amp;</span>str&gt; = HashMap::new();
 
@@ -373,7 +412,10 @@
             connection_meta.insert(<span class="string">&quot;is_primary&quot;</span>, <span class="bool-val">false</span>);
 
             <span class="attr">#[cfg(feature = <span class="string">&quot;log&quot;</span>)]
-            </span>log(Scope::Info, <span class="macro">format!</span>(<span class="string">&quot;generating connection meta for {}&quot;</span>, connection_id.clone()).as_str());
+            </span>log(
+                Scope::Info,
+                <span class="macro">format!</span>(<span class="string">&quot;generating connection meta for {}&quot;</span>, connection_id.clone()).as_str(),
+            );
 
             <span class="self">self</span>.connections
                 .insert(connection_id.to_owned(), connection_meta);
@@ -383,7 +425,10 @@
             );
 
             <span class="attr">#[cfg(feature = <span class="string">&quot;log&quot;</span>)]
-            </span>log(Scope::Info, <span class="macro">format!</span>(<span class="string">&quot;successfully created connection {}&quot;</span>, connection_id.clone()).as_str());
+            </span>log(
+                Scope::Info,
+                <span class="macro">format!</span>(<span class="string">&quot;successfully created connection {}&quot;</span>, connection_id.clone()).as_str(),
+            );
 
             <span class="kw">return </span>(<span class="self">self</span>, connection_id);
         } <span class="kw">else </span>{
@@ -410,6 +455,11 @@
             <span class="kw">let </span>target_id = <span class="kw">match </span>connection_id {
                 <span class="prelude-val">Some</span>(conn_id) =&gt; conn_id,
                 <span class="prelude-val">None </span>=&gt; {
+                    <span class="attr">#[cfg(feature = <span class="string">&quot;log&quot;</span>)]
+                    </span>log(
+                        Scope::Warning,
+                        <span class="string">&quot;no connection id provided, defaulting to last access connection!&quot;</span>,
+                    );
                     <span class="kw">let </span>conn_id = <span class="self">self
                         </span>.connections
                         .get::&lt;String&gt;(<span class="string">&quot;last_accessed_connection&quot;</span>.to_string())
@@ -417,6 +467,12 @@
                         .to_owned();
 
                     <span class="kw">if </span>conn_id == <span class="string">&quot;Unknown&quot;</span>.to_string() {
+                        <span class="attr">#[cfg(feature = <span class="string">&quot;log&quot;</span>)]
+                        </span>log(
+                            Scope::Error,
+                            <span class="string">&quot;no last known connection, please manually supply one&quot;</span>,
+                        );
+
                         <span class="macro">panic!</span>(<span class="string">&quot;no last known connection, please manually supply one&quot;</span>)
                     } <span class="kw">else </span>{
                         conn_id
@@ -424,13 +480,14 @@
                 }
             };
 
-            
-
             <span class="attr">#[cfg(feature = <span class="string">&quot;log&quot;</span>)]
             </span><span class="kw">let </span>logger_id = target_id.clone();
 
             <span class="attr">#[cfg(feature = <span class="string">&quot;log&quot;</span>)]
-            </span>log(Scope::Info, <span class="macro">format!</span>(<span class="string">&quot;calculated target {}&quot;</span>, logger_id).as_str());
+            </span>log(
+                Scope::Info,
+                <span class="macro">format!</span>(<span class="string">&quot;calculated target {}&quot;</span>, logger_id).as_str(),
+            );
 
             <span class="kw-2">*</span><span class="self">self
                 </span>.connections
@@ -440,8 +497,11 @@
                 .remove::&lt;HashMap&lt;<span class="kw-2">&amp;</span>str&gt;&gt;(target_id)
                 .expect(<span class="string">&quot;non existent connection id supplied&quot;</span>);
 
-                <span class="attr">#[cfg(feature = <span class="string">&quot;log&quot;</span>)]
-                </span>log(Scope::Info, <span class="macro">format!</span>(<span class="string">&quot;successfully disconnected from {}&quot;</span>, logger_id).as_str());
+            <span class="attr">#[cfg(feature = <span class="string">&quot;log&quot;</span>)]
+            </span>log(
+                Scope::Info,
+                <span class="macro">format!</span>(<span class="string">&quot;successfully disconnected from {}&quot;</span>, logger_id).as_str(),
+            );
         } <span class="kw">else </span>{
             <span class="macro">panic!</span>(<span class="string">&quot;fatal: signal has been destroyed!&quot;</span>)
         }
@@ -466,26 +526,38 @@
     </span><span class="kw">pub fn </span>fire(<span class="kw-2">&amp;mut </span><span class="self">self</span>, connection_id: <span class="prelude-ty">Option</span>&lt;String&gt;) {
         <span class="kw">let </span>conn_id = <span class="kw">match </span>connection_id {
             <span class="prelude-val">Some</span>(target_id) =&gt; target_id,
-            <span class="prelude-val">None </span>=&gt; <span class="self">self
-                </span>.connections
-                .get::&lt;String&gt;(<span class="string">&quot;last_accessed_connection&quot;</span>.to_string())
-                .unwrap()
-                .to_owned(),
+            <span class="prelude-val">None </span>=&gt; {
+                <span class="attr">#[cfg(feature = <span class="string">&quot;log&quot;</span>)]
+                </span>log(
+                    Scope::Warning,
+                    <span class="string">&quot;no connection id provided, defaulting to last access connection!&quot;</span>,
+                );
+                <span class="self">self</span>.connections
+                    .get::&lt;String&gt;(<span class="string">&quot;last_accessed_connection&quot;</span>.to_string())
+                    .unwrap()
+                    .to_owned()
+            }
         };
 
         <span class="attr">#[cfg(feature = <span class="string">&quot;log&quot;</span>)]
         </span><span class="kw">let </span>logger_id = conn_id.clone();
 
         <span class="attr">#[cfg(feature = <span class="string">&quot;log&quot;</span>)]
-        </span>log(Scope::Info, <span class="macro">format!</span>(<span class="string">&quot;calculated connection target {}&quot;</span>, logger_id).as_str());
+        </span>log(
+            Scope::Info,
+            <span class="macro">format!</span>(<span class="string">&quot;calculated connection target {}&quot;</span>, logger_id).as_str(),
+        );
 
         <span class="kw">let </span>conn_meta = <span class="self">self
             </span>.connections
             .get::&lt;HashMap&lt;<span class="kw-2">&amp;</span>str&gt;&gt;(conn_id)
             .expect(<span class="string">&quot;non existent connection id supplied&quot;</span>);
 
-            <span class="attr">#[cfg(feature = <span class="string">&quot;log&quot;</span>)]
-            </span>log(Scope::Info, <span class="macro">format!</span>(<span class="string">&quot;generating connection {:#?}&quot;</span>, logger_id).as_str());
+        <span class="attr">#[cfg(feature = <span class="string">&quot;log&quot;</span>)]
+        </span>log(
+            Scope::Info,
+            <span class="macro">format!</span>(<span class="string">&quot;generating connection {:#?}&quot;</span>, logger_id).as_str(),
+        );
 
         conn_meta.get::&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span><span class="kw">dyn </span>Fn()&gt;(<span class="string">&quot;callback&quot;</span>).unwrap()();
     }
@@ -509,14 +581,14 @@
 <span class="kw">impl </span>Drop <span class="kw">for </span>Signal {
     <span class="kw">fn </span>drop(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         <span class="attr">#[cfg(feature = <span class="string">&quot;log&quot;</span>)]
-        </span>log(Scope::Info, <span class="macro">format!</span>(<span class="string">&quot;dropping self: Signal&quot;</span>).as_str());
+        </span>log(Scope::Info, <span class="string">&quot;dropping self: Signal&quot;</span>);
 
         <span class="self">self</span>.destroyed = <span class="bool-val">true</span>;
 
         <span class="self">self</span>.connections = HashMap::new();
 
         <span class="attr">#[cfg(feature = <span class="string">&quot;log&quot;</span>)]
-        </span>log(Scope::Info, <span class="macro">format!</span>(<span class="string">&quot;sucessfully ran drop cleanup&quot;</span>).as_str());
+        </span>log(Scope::Info, <span class="string">&quot;sucessfully ran drop cleanup&quot;</span>);
     }
 }
 
