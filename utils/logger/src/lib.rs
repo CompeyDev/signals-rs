@@ -1,4 +1,5 @@
 use chrono;
+use colored::Colorize;
 
 #[derive(Debug, Clone, Copy)]
 pub enum Scope {
@@ -11,9 +12,9 @@ pub fn log(scope: Scope, msg: &str) {
     let now = chrono::Local::now().format("%d/%m/%Y %H:%M:%S:%MS");
 
     match scope {
-        Scope::Info => println!("[{} :: info] -> {}", now, msg),
-        Scope::Warning => println!("[{} :: warn] -> {}", now, msg),
-        Scope::Error => println!("[{} :: error] -> {}", now, msg),
+        Scope::Info => println!("[{} :: {}] -> {}", now, "info".green().bold(), msg),
+        Scope::Warning => println!("[{} :: {}] -> {}", now, "warn".yellow().bold(), msg),
+        Scope::Error => println!("[{} :: {}] -> {}", now, "error".red().bold(), msg),
     }
 }
 

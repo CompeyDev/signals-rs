@@ -79,7 +79,10 @@ impl Signal {
             let connection_id: String = format!("{:x}", random::<u32>());
 
             #[cfg(feature = "log")]
-            log(Scope::Info, format!("generating connection {}", connection_id.clone()).as_str());
+            log(
+                Scope::Info,
+                format!("generating connection {}", connection_id.clone()).as_str(),
+            );
 
             let mut connection_meta: HashMap<&str> = HashMap::new();
 
@@ -87,7 +90,10 @@ impl Signal {
             connection_meta.insert("is_primary", false);
 
             #[cfg(feature = "log")]
-            log(Scope::Info, format!("generating connection meta for {}", connection_id.clone()).as_str());
+            log(
+                Scope::Info,
+                format!("generating connection meta for {}", connection_id.clone()).as_str(),
+            );
 
             self.connections
                 .insert(connection_id.to_owned(), connection_meta);
@@ -97,7 +103,10 @@ impl Signal {
             );
 
             #[cfg(feature = "log")]
-            log(Scope::Info, format!("successfully created connection {}", connection_id.clone()).as_str());
+            log(
+                Scope::Info,
+                format!("successfully created connection {}", connection_id.clone()).as_str(),
+            );
 
             return (self, connection_id);
         } else {
@@ -124,6 +133,11 @@ impl Signal {
             let target_id = match connection_id {
                 Some(conn_id) => conn_id,
                 None => {
+                    #[cfg(feature = "log")]
+                    log(
+                        Scope::Warning,
+                        "no connection id provided, defaulting to last access connection!",
+                    );
                     let conn_id = self
                         .connections
                         .get::<String>("last_accessed_connection".to_string())
@@ -131,6 +145,12 @@ impl Signal {
                         .to_owned();
 
                     if conn_id == "Unknown".to_string() {
+                        #[cfg(feature = "log")]
+                        log(
+                            Scope::Error,
+                            "no last known connection, please manually supply one",
+                        );
+
                         panic!("no last known connection, please manually supply one")
                     } else {
                         conn_id
@@ -138,13 +158,14 @@ impl Signal {
                 }
             };
 
-            
-
             #[cfg(feature = "log")]
             let logger_id = target_id.clone();
 
             #[cfg(feature = "log")]
-            log(Scope::Info, format!("calculated target {}", logger_id).as_str());
+            log(
+                Scope::Info,
+                format!("calculated target {}", logger_id).as_str(),
+            );
 
             *self
                 .connections
@@ -154,8 +175,11 @@ impl Signal {
                 .remove::<HashMap<&str>>(target_id)
                 .expect("non existent connection id supplied");
 
-                #[cfg(feature = "log")]
-                log(Scope::Info, format!("successfully disconnected from {}", logger_id).as_str());
+            #[cfg(feature = "log")]
+            log(
+                Scope::Info,
+                format!("successfully disconnected from {}", logger_id).as_str(),
+            );
         } else {
             panic!("fatal: signal has been destroyed!")
         }
@@ -180,26 +204,38 @@ impl Signal {
     pub fn fire(&mut self, connection_id: Option<String>) {
         let conn_id = match connection_id {
             Some(target_id) => target_id,
-            None => self
-                .connections
-                .get::<String>("last_accessed_connection".to_string())
-                .unwrap()
-                .to_owned(),
+            None => {
+                #[cfg(feature = "log")]
+                log(
+                    Scope::Warning,
+                    "no connection id provided, defaulting to last access connection!",
+                );
+                self.connections
+                    .get::<String>("last_accessed_connection".to_string())
+                    .unwrap()
+                    .to_owned()
+            }
         };
 
         #[cfg(feature = "log")]
         let logger_id = conn_id.clone();
 
         #[cfg(feature = "log")]
-        log(Scope::Info, format!("calculated connection target {}", logger_id).as_str());
+        log(
+            Scope::Info,
+            format!("calculated connection target {}", logger_id).as_str(),
+        );
 
         let conn_meta = self
             .connections
             .get::<HashMap<&str>>(conn_id)
             .expect("non existent connection id supplied");
 
-            #[cfg(feature = "log")]
-            log(Scope::Info, format!("generating connection {:#?}", logger_id).as_str());
+        #[cfg(feature = "log")]
+        log(
+            Scope::Info,
+            format!("generating connection {:#?}", logger_id).as_str(),
+        );
 
         conn_meta.get::<&'static dyn Fn()>("callback").unwrap()();
     }
