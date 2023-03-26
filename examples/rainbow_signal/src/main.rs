@@ -17,13 +17,11 @@ fn main() {
 
         for (_, char) in orig_msg.chars().enumerate() {
             let char_string = char.to_string();
-            let choices = vec!["red", "blue", "purple", "yellow", "green", "magenta"];
+            let mut choices = vec!["red", "blue", "purple", "yellow", "green", "magenta"];
 
-            let mut choices_idx: Vec<usize> = (0..choices.len()).collect();
+            choices.shuffle(&mut rng);
 
-            choices_idx.shuffle(&mut rng);
-
-            let chosen_color = choices[choices_idx[0]];
+            let chosen_color = choices[0];
             let chosen_color_string = match chosen_color {
                 "red" => char_string.red(),
                 "blue" => char_string.blue(),
