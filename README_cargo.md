@@ -28,3 +28,12 @@ In order to install signals-rs, first switch to a nightly channel (`rustup toolc
 [dependencies]
 signals_rs = { git = "https://github.com/CompeyDev/signals-rs.git", branch = "main" }
 ```
+
+# Features
+As of now, this crate consists 1 feature, namely `log`. This feature is opt-in and enables progress logging for various activities, classified into "errors", "warns", and "info" logs. Useful for debugging purposes.
+
+It can be enabled as such:
+```toml
+[dependencies]
+signals_rs = { git = "https://github.com/CompeyDev/signals-rs.git", branch = "main", features = ["log"] }
+```
