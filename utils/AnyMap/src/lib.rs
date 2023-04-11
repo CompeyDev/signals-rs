@@ -2,7 +2,7 @@
 
 use std::any::{Any, TypeId};
 use std::cmp::Eq;
-use std::collections::HashMap;
+use hashbrown::HashMap;
 use std::hash::Hash;
  
 type HashKey<K> = (K, TypeId);
