@@ -18,7 +18,7 @@ use rand::random;
 /// fn main() {
 ///     let mut some_signal = Signal::new();
 ///
-///     let (_, connection_id) = some_signal.connect(&|| println!("This signal has been fired, continuing..."));
+///     let (_, connection_id) = some_signal.connect(&|_| println!("This signal has been fired, continuing..."));
 ///     some_signal.disconnect(connection_id); // This "disconnects" from a signal and removes the registered callback, as it is no longer required.
 ///
 ///     some_signal.destroy(); // Signals can be destroyed or dropped too.
@@ -64,7 +64,7 @@ impl Signal {
     ///
     /// let mut signal = Signal::new();
     ///
-    /// let (_, first_callback_id) = signal.connect(&|| println!("received signal fire from callback #1!"));
+    /// let (_, first_callback_id) = signal.connect(&|_| println!("received signal fire from callback #1!"));
     ///
     /// fn signal_callback() {
     ///     println!("received signal fire from callback #2!");
@@ -74,6 +74,20 @@ impl Signal {
     ///
     /// println!("#1 -> {}", first_callback_id);
     /// println!("#2 -> {}", second_callback_id);
+    /// ```
+    /// 
+    /// The callback provided to a signal connection must be a function which accepts
+    /// a single parameter of the type `Argument`. This parameter is a vector which 
+    /// can be supplied with arbritrary values as parameters to execute the 
+    /// connection with **on fire**.
+    /// 
+    /// ```
+    /// signal.connect(&|args| {
+    ///     let first_arg = args.get::<&str>(0);
+    ///     let second_arg = args.get::<u32>(1);
+    /// 
+    ///     println!("arg #1: {}; arg #2: {}", first_arg, second_arg);
+    /// });
     /// ```
     pub fn connect(&mut self, callback: &'static dyn Fn(Arguments)) -> (&mut Signal, String) {
         if !self.destroyed {
@@ -125,7 +139,7 @@ impl Signal {
     ///
     /// let mut signal = Signal::new();
     ///
-    /// let (_, callback_id) = signal.connect(&|| println!("received signal fire from callback"));
+    /// let (_, callback_id) = signal.connect(&|_| println!("received signal fire from callback"));
     ///
     /// signal.disconnect(Some(callback_id));
     /// ```
@@ -200,6 +214,21 @@ impl Signal {
     ///
     /// signal.fire(Some(callback_id));
     /// signal.disconnect(Some(callback_id));
+    /// ```
+    /// <br />
+    /// 
+    /// On fire, an optional args parameter can be provided, which contains `Arguments` to execute the connection 
+    /// with. This crate also provides a wrapper wround `std::vec::Vec`, which allows the vector to contain
+    /// values with irregular types.
+    /// 
+    /// ```
+    /// use signals_rs::{Signal, Arguments};
+    /// let params = Arguments::new();
+    /// 
+    /// params.push("Hello!");
+    /// params.push(392);
+    /// 
+    /// signal.fire(Some(params));
     /// ```
 
     pub fn fire(&mut self, connection_id: Option<String>, args: Option<Arguments>) {
