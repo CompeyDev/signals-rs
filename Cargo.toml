@@ -8,6 +8,7 @@ edition = "2021"
 
 [dependencies]
 anymap = { path = "./utils/AnyMap" }
+anyvec = { path = "./utils/AnyVec" }
 logger = { path = "./utils/logger" }
 rand = "0.8.5"
 

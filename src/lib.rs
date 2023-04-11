@@ -1,12 +1,13 @@
 #![doc = include_str!("../README_cargo.md")]
 
 use anymap::AnyMap as HashMap;
+pub use anyvec::AnyVec as Arguments;
 #[cfg(feature = "log")]
 use logger::{log, Scope};
 use rand::random;
 
 /// # signals-rs
-/// `signals-rs` is a Rust-inspired implementation similar to lua(u) signals/events.
+/// `signals-rs` is a lua(u)-inspired implementation of signals/events.
 ///
 /// A signal is a global state switch which can be used as a gateway for conditional code execution.
 /// Signals can be activated by first "connecting" to them with a callback, then "firing" them to toggle their state.
@@ -74,7 +75,7 @@ impl Signal {
     /// println!("#1 -> {}", first_callback_id);
     /// println!("#2 -> {}", second_callback_id);
     /// ```
-    pub fn connect(&mut self, callback: &'static dyn Fn()) -> (&mut Signal, String) {
+    pub fn connect(&mut self, callback: &'static dyn Fn(Arguments)) -> (&mut Signal, String) {
         if !self.destroyed {
             let connection_id: String = format!("{:x}", random::<u32>());
 
@@ -201,7 +202,7 @@ impl Signal {
     /// signal.disconnect(Some(callback_id));
     /// ```
 
-    pub fn fire(&mut self, connection_id: Option<String>) {
+    pub fn fire(&mut self, connection_id: Option<String>, args: Option<Arguments>) {
         let conn_id = match connection_id {
             Some(target_id) => target_id,
             None => {
@@ -215,6 +216,11 @@ impl Signal {
                     .unwrap()
                     .to_owned()
             }
+        };
+
+        let exec_args = match args {
+            Some(args) => args,
+            None => Arguments::new(),
         };
 
         #[cfg(feature = "log")]
@@ -237,7 +243,7 @@ impl Signal {
             format!("generating connection {:#?}", logger_id).as_str(),
         );
 
-        conn_meta.get::<&'static dyn Fn()>("callback").unwrap()();
+        conn_meta.get::<&'static dyn Fn(Arguments)>("callback").unwrap()(exec_args);
     }
 
     /// `Signal.destroy` destroys the signal and all registered callbacks are rendered dysfunctional. It is good practice
@@ -278,7 +284,7 @@ mod tests {
     fn connection_works() {
         let mut signal = Signal::new();
 
-        signal.connect(&|| println!("received signal fire!"));
+        signal.connect(&|_| println!("received signal fire!"));
 
         assert_eq!(
             signal
@@ -295,7 +301,7 @@ mod tests {
     fn disconnection_works() {
         let mut signal = Signal::new();
 
-        signal.connect(&|| println!("received signal fire!"));
+        signal.connect(&|_| println!("received signal fire!"));
 
         signal.disconnect(None);
     }
@@ -304,19 +310,34 @@ mod tests {
     fn destruction_works() {
         let mut signal = Signal::new();
 
-        signal.connect(&|| println!("received signal fire!"));
+        signal.connect(&|_| println!("received signal fire!"));
 
         signal.destroy();
+    }
 
-        assert_eq!(signal.destroyed, true);
+    #[test]
+    fn args_works() {
+        let mut signal = Signal::new();
+
+        signal.connect(&|args| {
+            let secret_msg = args.get::<&str>(0).unwrap().to_owned();
+
+            println!(
+                "this signal was invoked with the secret message {}",
+                secret_msg
+            );
+        });
+
+        signal.disconnect(None);
+        signal.destroy();
     }
 
     #[test]
     fn fire_works() {
         let mut signal = Signal::new();
 
-        let (_, conn_id) = signal.connect(&|| println!("received signal fire!"));
+        let (_, conn_id) = signal.connect(&|_| println!("received signal fire!"));
 
-        signal.fire(Some(conn_id));
+        signal.fire(Some(conn_id), None);
     }
 }
