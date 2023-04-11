@@ -1,7 +1,5 @@
 use signals_rs::{Signal, Arguments};
 
-
-
 fn main() {
     let mut signal = Signal::new();
 
@@ -16,7 +14,7 @@ fn main() {
 
     let mut signal_args = Arguments::new();
 
-    signal_args.insert(0, "Hello, signals!");
+    signal_args.push("Hello, signals!");
 
     signal.fire(None, Some(signal_args));
 
