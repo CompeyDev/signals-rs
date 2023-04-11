@@ -9,7 +9,7 @@ pub enum Scope {
 }
 
 pub fn log(scope: Scope, msg: &str) {
-    let now = chrono::Local::now().format("%d/%m/%Y %H:%M:%S:%MS");
+    let now = chrono::Local::now().format("%d/%m/%Y %H:%M:%S");
 
     match scope {
         Scope::Info => println!("[{} :: {}] -> {}", now, "info".green().bold(), msg),
