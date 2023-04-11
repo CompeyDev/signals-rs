@@ -21,6 +21,12 @@ impl AnyVec {
             .0
             .insert(key, Box::new(val));
     }
+
+    pub fn push<V: Any>(&mut self, val: V) {
+        self
+            .0
+            .push(Box::new(val));
+    }
  
     pub fn get<V: Any>(&self, idx: usize) -> Option<&V> {
         self.0.get(idx)?.downcast_ref::<V>()
