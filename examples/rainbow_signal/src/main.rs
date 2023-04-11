@@ -10,7 +10,7 @@ fn main() {
     let rainbow_time = &mut Signal::new();
 
     // Then we provide a connection callback to our signal.
-    let (conn, id) = rainbow_time.connect(&|| {
+    let (conn, id) = rainbow_time.connect(&|_| {
         let orig_msg = "ooo, rainbows!";
         let mut secret_msg: String = String::new();
         let choices = ["red", "blue", "purple", "yellow", "green", "magenta"];
@@ -39,7 +39,7 @@ fn main() {
     });
 
     // Now, we can fire this when we're ready and have our callback execute!
-    conn.fire(None);
+    conn.fire(None, None);
 
     // Post firing, we must clean up the signal that we no longer use.
     conn.disconnect(Some(id));
