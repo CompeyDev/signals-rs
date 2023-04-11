@@ -13,11 +13,11 @@ fn main() {
     let (conn, id) = rainbow_time.connect(&|| {
         let orig_msg = "ooo, rainbows!";
         let mut secret_msg: String = String::new();
+        let choices = ["red", "blue", "purple", "yellow", "green", "magenta"];
         let mut rng = rand::thread_rng();
 
         for (_, char) in orig_msg.chars().enumerate() {
             let char_string = char.to_string();
-            let choices = ["red", "blue", "purple", "yellow", "green", "magenta"];
             
             let choice_idx = rng.gen_range(0..choices.len());
             let chosen_color = choices[choice_idx];

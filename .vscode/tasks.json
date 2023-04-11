@@ -1,0 +1,62 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Cargo: Build project",
+            "detail": "Compile the library's source",
+            "type": "shell",
+            "command": "cargo build ${input:BUILD_TYPE}",
+            "group": {
+                "kind": "build"
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+                "focus": true,
+                "close": true
+            }
+        },
+        {
+            "label": "Cargo: Build example",
+            "detail": "Build a particular example to a binary",
+            "type": "process",
+            "windows": {
+                "command": "${env:ComSpec}",
+                "args": [
+                    "'cd examples/${input:EXAMPLE} && cargo build --release && mv ./examples/${input:EXAMPLE}/target/release/${input:EXAMPLE}.exe .'"
+                ]
+            },
+            "linux": {
+                "command": "sh",
+                "args": [
+                    "'cd examples/${input:EXAMPLE} && cargo build --release && mv ./examples/${input:EXAMPLE}/target/release/${input:EXAMPLE}.exe .'"
+                ]
+            },
+            "problemMatcher": [
+                "$rustc"
+            ]
+        },
+        {
+            "label": "Cargo: Generate docs",
+            "detail": "Generate documentation from annotations",
+            "type": "process",
+            "command": "cargo rustdoc --verbose ; mv target/doc ."
+        },
+    ],
+    "inputs": [
+        {
+            "id": "BUILD_TYPE",
+            "description": "type of build: debug/release",
+            "default": "debug",
+            "type": "promptString"
+        },
+        {
+            "id": "EXAMPLE",
+            "description": "example to build, located in examples directory",
+            "type": "promptString"
+        }
+    ]
+}

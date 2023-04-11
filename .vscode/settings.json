@@ -1,0 +1,8 @@
+{
+    "rust-analyzer.linkedProjects": [
+        ".\\examples\\rainbow_signal\\Cargo.toml",
+        ".\\examples\\with_logging\\Cargo.toml",
+        ".\\utils\\AnyMap\\Cargo.toml",
+        ".\\utils\\logger\\Cargo.toml"
+    ]
+}
