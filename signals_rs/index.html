@@ -4,15 +4,16 @@
 
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let </span><span class="kw-2">mut </span>some_signal = Signal::new();
 
-<span class="kw">let </span>(connection, connection_id) = some_signal.connect(<span class="kw-2">&amp;</span>|| <span class="macro">println!</span>(<span class="string">&quot;This signal has been fired, continuing...&quot;</span>));
+<span class="kw">let </span>(connection, connection_id) = some_signal.connect(<span class="kw-2">&amp;</span>|<span class="kw">_</span>| <span class="macro">println!</span>(<span class="string">&quot;This signal has been fired, continuing...&quot;</span>));
 
-<span class="comment">// We can now fire this connection to execute its registered callback. 
-// Do note that in a more complicated scenario with multiple connections to a signal, a connection_id parameter must be passed.
-</span>connection.fire(<span class="prelude-val">None</span>);
+<span class="comment">// We can now fire this connection to execute its registered callback.
+// Do note that in a more complicated scenario with multiple connections 
+// to a signal, a connection_id parameter must be passed.
+</span>connection.fire(<span class="prelude-val">None</span>, <span class="prelude-val">None</span>);
 
 <span class="comment">// This &quot;disconnects&quot; from a signal and removes the registered callback, as it is no longer required.
 </span>connection.disconnect(<span class="prelude-val">Some</span>(connection_id)); 
-    
+
 <span class="comment">// Signals can be destroyed or dropped too.
 </span>some_signal.destroy();</code></pre></div>
 <p>Signals are especially useful as lightweight events for global state sync-ups.</p>
