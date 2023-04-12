@@ -26,7 +26,7 @@ In order to install signals-rs, first switch to a nightly channel (`rustup toolc
 
 ```toml
 [dependencies]
-signals_rs = { git = "https://github.com/CompeyDev/signals-rs.git", branch = "main" }
+signals_rs = { git = "https://github.com/CompeyDev/signals-rs.git", rev = "2a236fe" }
 ```
 
 # Features
@@ -35,5 +35,5 @@ As of now, this crate consists 1 feature, namely `log`. This feature is opt-in a
 It can be enabled as such:
 ```toml
 [dependencies]
-signals_rs = { git = "https://github.com/CompeyDev/signals-rs.git", branch = "main", features = ["log"] }
+signals_rs = { git = "https://github.com/CompeyDev/signals-rs.git", rev = "2a236fe", features = ["log"] }
 ```

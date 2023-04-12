@@ -8,4 +8,4 @@ edition = "2021"
 [dependencies]
 colored = "2.0.0"
 rand = "0.8.5"
-signals_rs = { path = "../..", features = ["log"] }
+signals_rs = { git = "https://github.com/CompeyDev/signals-rs.git", rev = "2a236fe", features = ["log"] }
