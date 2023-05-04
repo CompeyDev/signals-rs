@@ -14,12 +14,12 @@ use rand::random;
 ///
 /// ```
 /// use signals_rs::Signal;
-///
+/// 
 /// fn main() {
 ///     let mut some_signal = Signal::new();
 ///
-///     let (_, connection_id) = some_signal.connect(&|_| println!("This signal has been fired, continuing..."));
-///     some_signal.disconnect(connection_id); // This "disconnects" from a signal and removes the registered callback, as it is no longer required.
+///     let (connection, connection_id) = some_signal.connect(&|_| println!("This signal has been fired, continuing..."));
+///     some_signal.disconnect(Some(connection_id)); // This "disconnects" from a signal and removes the registered callback, as it is no longer required.
 ///
 ///     some_signal.destroy(); // Signals can be destroyed or dropped too.
 /// }
@@ -35,7 +35,7 @@ impl Signal {
     /// `Signal::new` instantiates and returns a new Signal, which can then be made use of.
     ///
     /// ```
-    ///  use signal_rs::Signal;
+    ///  use signals_rs::Signal;
     ///
     ///  let mut signal = Signal::new();
     /// ```
@@ -60,13 +60,13 @@ impl Signal {
     /// `Signal.fire` & `Signal.disconnect`.
     ///
     /// ```
-    /// use signal_rs::Signal;
+    /// use signals_rs::{Signal, Arguments};
     ///
     /// let mut signal = Signal::new();
     ///
     /// let (_, first_callback_id) = signal.connect(&|_| println!("received signal fire from callback #1!"));
     ///
-    /// fn signal_callback() {
+    /// fn signal_callback(_args: Arguments) {
     ///     println!("received signal fire from callback #2!");
     /// }
     ///
@@ -82,11 +82,11 @@ impl Signal {
     /// connection with **on fire**.
     /// 
     /// ```
-    /// signal.connect(&|args| {
+    /// signals_rs::Signal::new().connect(&|args| {
     ///     let first_arg = args.get::<&str>(0);
     ///     let second_arg = args.get::<u32>(1);
     /// 
-    ///     println!("arg #1: {}; arg #2: {}", first_arg, second_arg);
+    ///     println!("arg #1: {}; arg #2: {}", first_arg.unwrap(), second_arg.unwrap());
     /// });
     /// ```
     pub fn connect(&mut self, callback: &'static dyn Fn(Arguments)) -> (&mut Signal, String) {
@@ -135,7 +135,7 @@ impl Signal {
     /// minimizes the risk of an unregistered connection from being disconnected.
     ///
     /// ```
-    /// use signal_rs::Signal;
+    /// use signals_rs::Signal;
     ///
     /// let mut signal = Signal::new();
     ///
@@ -206,14 +206,14 @@ impl Signal {
     /// fired.
     ///
     /// ```
-    /// use signal_rs::Signal;
+    /// use signals_rs::Signal;
     ///
     /// let mut signal = Signal::new();
     ///
-    /// let (_, callback_id) = signal.connect(&|| println!("received signal fire from callback"));
+    /// let (conn, callback_id) = signal.connect(&|_| println!("received signal fire from callback"));
     ///
-    /// signal.fire(Some(callback_id));
-    /// signal.disconnect(Some(callback_id));
+    /// conn.fire(Some(callback_id.clone()), None);
+    /// conn.disconnect(Some(callback_id));
     /// ```
     /// <br />
     /// 
@@ -223,12 +223,19 @@ impl Signal {
     /// 
     /// ```
     /// use signals_rs::{Signal, Arguments};
-    /// let params = Arguments::new();
+    /// 
+    /// let mut signal = Signal::new();
+    /// let mut params = Arguments::new();
+    /// 
+    /// signal.connect(&|args| {
+    ///     println!("received signal fire from callback");
+    ///     println!("args received: {:#?}", args);
+    /// });
     /// 
     /// params.push("Hello!");
     /// params.push(392);
     /// 
-    /// signal.fire(Some(params));
+    /// signal.fire(None, Some(params));
     /// ```
 
     pub fn fire(&mut self, connection_id: Option<String>, args: Option<Arguments>) {
@@ -280,7 +287,7 @@ impl Signal {
     /// `Drop` trait has been implemented for `Signal`.
     ///
     /// ```
-    /// use signal_rs::Signal;
+    /// use signals_rs::Signal;
     ///
     /// let mut signal = Signal::new();
     ///
