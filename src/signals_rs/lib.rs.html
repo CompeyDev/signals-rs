@@ -393,6 +393,15 @@
 <a href="#393" id="393">393</a>
 <a href="#394" id="394">394</a>
 <a href="#395" id="395">395</a>
+<a href="#396" id="396">396</a>
+<a href="#397" id="397">397</a>
+<a href="#398" id="398">398</a>
+<a href="#399" id="399">399</a>
+<a href="#400" id="400">400</a>
+<a href="#401" id="401">401</a>
+<a href="#402" id="402">402</a>
+<a href="#403" id="403">403</a>
+<a href="#404" id="404">404</a>
 </pre></div><pre class="rust"><code><span class="attr">#![doc = <span class="macro">include_str!</span>(<span class="string">&quot;../README_cargo.md&quot;</span>)]
 
 </span><span class="kw">use </span>anymap::AnyMap <span class="kw">as </span>HashMap;
@@ -410,7 +419,7 @@
                 alloc_args_anyvec.push::&lt;<span class="kw">_</span>&gt;(<span class="macro-nonterminal">$e</span>);
 
             )*
-            
+
 
             alloc_args_anyvec
         }
@@ -425,7 +434,7 @@
 ///
 /// ```
 /// use signals_rs::Signal;
-/// 
+///
 /// fn main() {
 ///     let mut some_signal = Signal::new();
 ///
@@ -486,17 +495,17 @@
     /// println!(&quot;#1 -&gt; {}&quot;, first_callback_id);
     /// println!(&quot;#2 -&gt; {}&quot;, second_callback_id);
     /// ```
-    /// 
+    ///
     /// The callback provided to a signal connection must be a function which accepts
-    /// a single parameter of the type `Argument`. This parameter is a vector which 
-    /// can be supplied with arbritrary values as parameters to execute the 
+    /// a single parameter of the type `Argument`. This parameter is a vector which
+    /// can be supplied with arbritrary values as parameters to execute the
     /// connection with **on fire**.
-    /// 
+    ///
     /// ```
     /// signals_rs::Signal::new().connect(&amp;|args| {
     ///     let first_arg = args.get::&lt;&amp;str&gt;(0);
     ///     let second_arg = args.get::&lt;u32&gt;(1);
-    /// 
+    ///
     ///     println!(&quot;arg #1: {}; arg #2: {}&quot;, first_arg.unwrap(), second_arg.unwrap());
     /// });
     /// ```
@@ -627,28 +636,35 @@
     /// conn.disconnect(Some(callback_id));
     /// ```
     /// &lt;br /&gt;
-    /// 
-    /// On fire, an optional args parameter can be provided, which contains `Arguments` to execute the connection 
+    ///
+    /// On fire, an optional args parameter can be provided, which contains `Arguments` to execute the connection
     /// with. This crate also provides a wrapper wround `std::vec::Vec`, which allows the vector to contain
     /// values with irregular types.
-    /// 
+    ///
     /// ```
     /// use signals_rs::{Signal, Arguments};
-    /// 
+    ///
     /// let mut signal = Signal::new();
     /// let mut params = Arguments::new();
-    /// 
+    ///
     /// signal.connect(&amp;|args| {
     ///     println!(&quot;received signal fire from callback&quot;);
     ///     println!(&quot;args received: {:#?}&quot;, args);
     /// });
-    /// 
+    ///
     /// params.push(&quot;Hello!&quot;);
     /// params.push(392);
-    /// 
+    ///
     /// signal.fire(None, Some(params));
     /// ```
-
+    /// Arguments can also be declared using the `args!` macro, this is usually useful for
+    /// declaring arguments in a short one-liner manner. When using this macro, the types are
+    /// inferred, so declaring inferrable types are recommended.
+    /// ```
+    /// use signals_rs::args;
+    ///
+    /// args { 123u32, 78f32, &quot;Hello!&quot; }; // Declaring numbers using suffixes makes them inferrable
+    /// ```
     </span><span class="kw">pub fn </span>fire(<span class="kw-2">&amp;mut </span><span class="self">self</span>, connection_id: <span class="prelude-ty">Option</span>&lt;String&gt;, args: <span class="prelude-ty">Option</span>&lt;Arguments&gt;) {
         <span class="kw">let </span>conn_id = <span class="kw">match </span>connection_id {
             <span class="prelude-val">Some</span>(target_id) =&gt; target_id,
@@ -690,7 +706,9 @@
             <span class="macro">format!</span>(<span class="string">&quot;generating connection {:#?}&quot;</span>, logger_id).as_str(),
         );
 
-        conn_meta.get::&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span><span class="kw">dyn </span>Fn(Arguments)&gt;(<span class="string">&quot;callback&quot;</span>).unwrap()(exec_args);
+        conn_meta
+            .get::&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span><span class="kw">dyn </span>Fn(Arguments)&gt;(<span class="string">&quot;callback&quot;</span>)
+            .unwrap()(exec_args);
     }
 
     <span class="doccomment">/// `Signal.destroy` destroys the signal and all registered callbacks are rendered dysfunctional. It is good practice
