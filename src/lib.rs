@@ -6,6 +6,22 @@ pub use anyvec::AnyVec as Arguments;
 use logger::{log, Scope};
 use rand::random;
 
+#[macro_export]
+macro_rules! args  {
+    ( $( $e:expr ),* ) => {
+        {
+            let mut alloc_args_anyvec = anyvec::AnyVec::new();
+            $(
+                alloc_args_anyvec.push::<_>($e);
+
+            )*
+            
+
+            alloc_args_anyvec
+        }
+    };
+}
+
 /// # signals-rs
 /// `signals-rs` is a lua(u)-inspired implementation of signals/events.
 ///
@@ -15,7 +31,7 @@ use rand::random;
 /// ```
 /// use signals_rs::Signal;
 /// 
-/// fn main() {
+/// fn main {
 ///     let mut some_signal = Signal::new();
 ///
 ///     let (connection, connection_id) = some_signal.connect(&|_| println!("This signal has been fired, continuing..."));
