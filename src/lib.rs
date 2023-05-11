@@ -15,7 +15,7 @@ macro_rules! args  {
                 alloc_args_anyvec.push::<_>($e);
 
             )*
-            
+
 
             alloc_args_anyvec
         }
@@ -30,7 +30,7 @@ macro_rules! args  {
 ///
 /// ```
 /// use signals_rs::Signal;
-/// 
+///
 /// fn main() {
 ///     let mut some_signal = Signal::new();
 ///
@@ -91,17 +91,17 @@ impl Signal {
     /// println!("#1 -> {}", first_callback_id);
     /// println!("#2 -> {}", second_callback_id);
     /// ```
-    /// 
+    ///
     /// The callback provided to a signal connection must be a function which accepts
-    /// a single parameter of the type `Argument`. This parameter is a vector which 
-    /// can be supplied with arbritrary values as parameters to execute the 
+    /// a single parameter of the type `Argument`. This parameter is a vector which
+    /// can be supplied with arbritrary values as parameters to execute the
     /// connection with **on fire**.
-    /// 
+    ///
     /// ```
     /// signals_rs::Signal::new().connect(&|args| {
     ///     let first_arg = args.get::<&str>(0);
     ///     let second_arg = args.get::<u32>(1);
-    /// 
+    ///
     ///     println!("arg #1: {}; arg #2: {}", first_arg.unwrap(), second_arg.unwrap());
     /// });
     /// ```
@@ -232,25 +232,25 @@ impl Signal {
     /// conn.disconnect(Some(callback_id));
     /// ```
     /// <br />
-    /// 
-    /// On fire, an optional args parameter can be provided, which contains `Arguments` to execute the connection 
+    ///
+    /// On fire, an optional args parameter can be provided, which contains `Arguments` to execute the connection
     /// with. This crate also provides a wrapper wround `std::vec::Vec`, which allows the vector to contain
     /// values with irregular types.
-    /// 
+    ///
     /// ```
     /// use signals_rs::{Signal, Arguments};
-    /// 
+    ///
     /// let mut signal = Signal::new();
     /// let mut params = Arguments::new();
-    /// 
+    ///
     /// signal.connect(&|args| {
     ///     println!("received signal fire from callback");
     ///     println!("args received: {:#?}", args);
     /// });
-    /// 
+    ///
     /// params.push("Hello!");
     /// params.push(392);
-    /// 
+    ///
     /// signal.fire(None, Some(params));
     /// ```
 
@@ -295,7 +295,9 @@ impl Signal {
             format!("generating connection {:#?}", logger_id).as_str(),
         );
 
-        conn_meta.get::<&'static dyn Fn(Arguments)>("callback").unwrap()(exec_args);
+        conn_meta
+            .get::<&'static dyn Fn(Arguments)>("callback")
+            .unwrap()(exec_args);
     }
 
     /// `Signal.destroy` destroys the signal and all registered callbacks are rendered dysfunctional. It is good practice

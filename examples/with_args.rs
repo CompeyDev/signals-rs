@@ -1,4 +1,4 @@
-use signals_rs::{Signal, Arguments};
+use signals_rs::{Arguments, Signal};
 
 fn main() {
     let mut signal = Signal::new();
