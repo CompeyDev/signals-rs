@@ -1,3 +1,10 @@
 /target
 /Cargo.lock
 *.exe
+
+# Generated Example Binaries
+rainbow_signal*
+with_logging*
+simple*
+with_args*
+args_macro*

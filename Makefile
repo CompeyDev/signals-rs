@@ -23,8 +23,8 @@ example: examples/
 	@echo -e "${log_prefix} Building example $(EXAMPLE)"
 	@echo -e "${command_prefix} cd examples/$(EXAMPLE) && cargo build --release"
 	@cd ${examples_dir} && cargo build --release
-	@echo -e "${command_prefix} mv ./target/release/$(EXAMPLE).exe .."
-	@mv ./${examples_dir}/target/release/$(EXAMPLE).exe .
+	@echo -e "${command_prefix} mv ./target/release/$(EXAMPLE) .."
+	@mv ./${examples_dir}/target/release/$(EXAMPLE) .
 
 docsgen:
 	@echo -e "${log_prefix} Generating docs for signals-rs..."
