@@ -253,7 +253,14 @@ impl Signal {
     ///
     /// signal.fire(None, Some(params));
     /// ```
-
+    /// Arguments can also be declared using the `args!` macro, this is usually useful for
+    /// declaring arguments in a short one-liner manner. When using this macro, the types are
+    /// inferred, so declaring inferrable types are recommended.
+    /// ```
+    /// use signals_rs::args;
+    ///
+    /// args { 123u32, 78f32, "Hello!" }; // Declaring numbers using suffixes makes them inferrable
+    /// ```
     pub fn fire(&mut self, connection_id: Option<String>, args: Option<Arguments>) {
         let conn_id = match connection_id {
             Some(target_id) => target_id,
