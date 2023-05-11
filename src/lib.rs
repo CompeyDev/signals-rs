@@ -31,7 +31,7 @@ macro_rules! args  {
 /// ```
 /// use signals_rs::Signal;
 /// 
-/// fn main {
+/// fn main() {
 ///     let mut some_signal = Signal::new();
 ///
 ///     let (connection, connection_id) = some_signal.connect(&|_| println!("This signal has been fired, continuing..."));
